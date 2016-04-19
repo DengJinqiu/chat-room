@@ -1,0 +1,7 @@
+!!!
+%html
+  %body
+    create user
+    = form_for :user, :url => {:controller => 'users', :action => 'create'} do |f|
+      .input.form-control= f.text_field :name
+      .button.btn.btn-lg.btn-primary.btn-block= f.submit "Create"
