@@ -9,6 +9,7 @@ class SessionsController < ApplicationController
       redirect_to :controller => "users", :action => "index"
     else
       Rails.logger.debug userName << " does not exist"
+      session[:current_user_id] = nil
       render :action => "new"
     end
   end
@@ -16,6 +17,8 @@ class SessionsController < ApplicationController
   def new
   end
 
-  def index
+  def destroy
+    session[:current_user_id] = nil
+    render root_url
   end
 end

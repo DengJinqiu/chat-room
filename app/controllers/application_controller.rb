@@ -6,15 +6,19 @@ class ApplicationController < ActionController::Base
   protected
 
   def verify_user
-    if current_user()
-      Rails.logger.debug "Current user is " + current_user()
+    if get_current_user()
+      Rails.logger.debug "Current user is " + get_current_user()
     else
       Rails.logger.debug "Current user does not exist, redirect to home page"
-      redirect_to root_url
+      render root_url
     end
   end
 
-  def current_user
+  def get_current_user
     return session[:current_user_id]
+  end
+
+  def getGroupId(user1, user2)
+    return user1 > user2 ? user1 + "*" + user2 : user2 + "*" + user1
   end
 end

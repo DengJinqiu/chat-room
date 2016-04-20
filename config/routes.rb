@@ -5,5 +5,6 @@ Rails.application.routes.draw do
   root to: "sessions#new"
   resources :sessions
   resources :users
+  resources :conversations
   mount ActionCable.server => '/cable'
 end

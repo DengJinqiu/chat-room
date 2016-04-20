@@ -2,8 +2,13 @@ class UsersController < ApplicationController
   def create
     Rails.logger.debug "Create " << params[:user][:name]
 
-    @user = User.new(user_params)
-    @user.save
+    user = User.new(user_params)
+    user.save
+    session[:current_user_id] = user.name
+    ActionCable.server.broadcast "all_users", \
+      {name: "<li class=\"list-group-item\"> \
+        <a href=\"/users?selectedUser=" + params[:user][:name] + "\">" \
+          + params[:user][:name] + "</a></li>"}
     redirect_to :action => "index"
   end
 
@@ -12,6 +17,12 @@ class UsersController < ApplicationController
 
   def index
     verify_user
+    @currentUser = get_current_user()
+    @userNames = User.pluck(:name)
+    @selectedUser = params[:selectedUser]
+    if @selectedUser
+      @groupId = getGroupId @currentUser, @selectedUser
+    end
   end
 
   private

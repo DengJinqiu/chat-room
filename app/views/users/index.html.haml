@@ -1,1 +1,40 @@
-Great!!!
+!!!
+%html
+  %head
+    :javascript
+      window.App = window.App || {}
+      window.App.Data = window.App.Data || {}
+      window.App.Data.groupId = "#{@groupId}"
+  %body
+    .container
+      %nav.navbar.navbar-inverse
+        .navbar-brand
+          Current user is:
+          = @currentUser
+        .navbar-right.navbar-collapse
+          = button_to "Log out", {:controller => 'sessions', :action => 'destroy',:id => "dummy"}, :method => 'delete', :class => 'btn btn-warning'
+
+      .row
+        .col-sm-3
+          .panel.panel-default{"data-channel" => "users", :style => "min-height: 100px; max-height: 300px; overflow-y: scroll"}
+            %ul.list-group
+            - @userNames.each do |name|
+              %li.list-group-item
+                = link_to name, {:controller => 'users', :action => 'index', :selectedUser => name}
+        .col-sm-9
+          - if @selectedUser
+            %h3{:style => "margin-top: 0px"}
+              %span.label.label-info
+                You are chatting with:
+                = @selectedUser
+            .panel.panel-default{"data-channel" => "messages", :style => "min-height: 100px; max-height: 300px; overflow-y: scroll"}
+              .controller
+                %p message board
+            .panel.panel-default
+              = form_for :conversation, :url => {:controller => 'conversations', :action => 'create'} do |f|
+                = f.text_field :context, :class => 'form-control', :id => 'userName', :placeholder => 'message', :autofocus => true, :required => true
+                = f.text_field :selectedUser, :value => "safasdf"
+                = f.submit "Send", :style => "float: right", :class => 'button btn button-success btn-primary'
+          - else
+            %h3{:style => "margin-top: 0px"}
+              %span.label.label-info Please select a person to chat with

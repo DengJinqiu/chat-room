@@ -1,7 +1,9 @@
 !!!
 %html
   %body
-    create user
-    = form_for :user, :url => {:controller => 'users', :action => 'create'} do |f|
-      .input.form-control= f.text_field :name
-      .button.btn.btn-lg.btn-primary.btn-block= f.submit "Create"
+    .container
+      = form_for :user, :html => {:class => 'form-login'}, :url => {:controller => 'users', :action => 'create'} do |f|
+        %h2.form-login-heading Please create account
+        = f.text_field :name, :class => 'form-control', :type => 'name', :id => 'userName', :placeholder => 'User name', :autofocus => true, :required => true
+        %p
+        = f.submit "Create", :class => 'button btn btn-lg btn-primary btn-block'
