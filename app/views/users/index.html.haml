@@ -5,6 +5,7 @@
       window.App = window.App || {}
       window.App.Data = window.App.Data || {}
       window.App.Data.groupId = "#{@groupId}"
+      window.App.Data.currentUser = "#{@currentUser}"
   %body
     .container
       %nav.navbar.navbar-inverse
@@ -13,7 +14,6 @@
           = @currentUser
         .navbar-right.navbar-collapse
           = button_to "Log out", {:controller => 'sessions', :action => 'destroy',:id => "dummy"}, :method => 'delete', :class => 'btn btn-warning'
-
       .row
         .col-sm-3
           .panel.panel-default{"id" => "users-board", :style => "min-height: 100px; max-height: 300px; overflow-y: scroll"}
@@ -22,7 +22,10 @@
               %li.list-group-item
                 = link_to name, {:controller => 'users', :action => 'index', :selectedUser => name}
         .col-sm-9
+          %script App.users.disconnect()
+          %script App.users.followUsersChange()
           - if @selectedUser
+            %script App.users.followConversationsChange()
             %h3{:style => "margin-top: 0px"}
               %span.label.label-info
                 You are chatting with:
@@ -34,6 +37,7 @@
                 = f.text_field :context, :class => 'form-control', :id => 'userName', :placeholder => 'message', :autofocus => true, :required => true
                 = f.text_field :selectedUser, :value => "#{@selectedUser}", :type => 'hidden'
                 = f.submit "Send", :style => "float: right", :class => 'button btn button-success btn-primary'
+              = button_to "Fetch history", {:controller => 'conversations', :action => 'show', :id => "#{@groupId}"}, :method => 'get', :class => 'btn btn-success'
           - else
             %h3{:style => "margin-top: 0px"}
               %span.label.label-info Please select a person to chat with

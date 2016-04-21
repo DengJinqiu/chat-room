@@ -1,10 +1,6 @@
 class UsersChannel < ApplicationCable::Channel
   def follow(data)
-    stop_all_streams
-    Rails.logger "my log here*******************************8"
-    Rails.logger "my log follow" + data['message_id']
-    # stream_from "#data['message_id']"
-    stream_from "dddd"
+    stream_from "#{data['messageId'].to_str}"
   end
 
   def unfollow

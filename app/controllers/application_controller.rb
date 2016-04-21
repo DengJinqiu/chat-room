@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
       Rails.logger.debug "Current user is " + get_current_user()
     else
       Rails.logger.debug "Current user does not exist, redirect to home page"
-      render root_url
+      redirect_to root_url
     end
   end
 

@@ -1,27 +1,29 @@
 App.users = App.cable.subscriptions.create "UsersChannel",
-  connected: ->
-    # Wait cable subscriptions to finish before sending messages
-    setTimeout =>
-      @followConversationsChange()
-      @followUsersChange()
-    , 1000
+  disconnect: ->
+    #alert('end follow')
+    @perform 'unfollow'
 
   received: (data) ->
     switch data.action
-      when "new_user"
-        alert("user change")
+      when "newUser"
         $('#users-board').append(data.message)
-      when "new_message"
-        alert("message change")
-        eval(data.message)
+      when "newMessage"
+        if data.currentUser is window.App.Data.currentUser
+          $('#message-board').append("<div style=\"color: dodgerblue\">" + data.message + "</p>")
+        else
+          $('#message-board').append(data.message)
 
   followUsersChange: ->
-    alert("follow user")
-    #@perform 'follow', {message_id: 'user_change'}
-    @perform 'follow'
-    @perform 'unfollow'
+    # Wait for cable subscriptions to always be finalized before sending messages
+    setTimeout =>
+      #alert('follow users')
+      @perform 'follow', {messageId: 'userChange'}
+    , 1000
 
   followConversationsChange: ->
-    if window.App.Data.groupId.length > 0
-      alert("follow message")
-      @perform 'follow', message_id: window.App.Data.groupId
+    # Wait for cable subscriptions to always be finalized before sending messages
+    setTimeout =>
+      #alert('follow message')
+      if window.App.Data.groupId.length > 0
+        @perform 'follow', messageId: window.App.Data.groupId
+    , 1000
