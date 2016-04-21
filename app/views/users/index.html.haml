@@ -16,7 +16,7 @@
 
       .row
         .col-sm-3
-          .panel.panel-default{"data-channel" => "users", :style => "min-height: 100px; max-height: 300px; overflow-y: scroll"}
+          .panel.panel-default{"id" => "users-board", :style => "min-height: 100px; max-height: 300px; overflow-y: scroll"}
             %ul.list-group
             - @userNames.each do |name|
               %li.list-group-item
@@ -29,7 +29,6 @@
                 = @selectedUser
             .panel.panel-default{"data-channel" => "messages", :style => "min-height: 100px; max-height: 300px; overflow-y: scroll"}
               .container{:id => 'message-board'}
-                %p message board
             .panel.panel-default
               = form_for :conversation, :url => {:controller => 'conversations', :action => 'create'}, remote:true do |f|
                 = f.text_field :context, :class => 'form-control', :id => 'userName', :placeholder => 'message', :autofocus => true, :required => true

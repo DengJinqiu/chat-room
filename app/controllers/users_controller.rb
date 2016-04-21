@@ -6,7 +6,8 @@ class UsersController < ApplicationController
     user.save
     session[:current_user_id] = user.name
     ActionCable.server.broadcast "all_users", \
-      {name: "<li class=\"list-group-item\"> \
+      {action: "new_user", \
+       message: "<li class=\"list-group-item\"> \
         <a href=\"/users?selectedUser=" + params[:user][:name] + "\">" \
           + params[:user][:name] + "</a></li>"}
     redirect_to :action => "index"
@@ -21,7 +22,7 @@ class UsersController < ApplicationController
     @userNames = User.pluck(:name)
     @selectedUser = params[:selectedUser]
     if @selectedUser
-      @groupId = getGroupId @currentUser, @selectedUser
+      @groupId = get_group_id @currentUser, @selectedUser
     end
   end
 

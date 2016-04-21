@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
     return session[:current_user_id]
   end
 
-  def getGroupId(user1, user2)
+  def get_group_id(user1, user2)
     return user1 > user2 ? user1 + "*" + user2 : user2 + "*" + user1
   end
 end
