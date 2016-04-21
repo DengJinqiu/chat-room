@@ -28,12 +28,12 @@
                 You are chatting with:
                 = @selectedUser
             .panel.panel-default{"data-channel" => "messages", :style => "min-height: 100px; max-height: 300px; overflow-y: scroll"}
-              .controller
+              .container{:id => 'message-board'}
                 %p message board
             .panel.panel-default
-              = form_for :conversation, :url => {:controller => 'conversations', :action => 'create'} do |f|
+              = form_for :conversation, :url => {:controller => 'conversations', :action => 'create'}, remote:true do |f|
                 = f.text_field :context, :class => 'form-control', :id => 'userName', :placeholder => 'message', :autofocus => true, :required => true
-                = f.text_field :selectedUser, :value => "safasdf"
+                = f.text_field :selectedUser, :value => "#{@selectedUser}", :type => 'hidden'
                 = f.submit "Send", :style => "float: right", :class => 'button btn button-success btn-primary'
           - else
             %h3{:style => "margin-top: 0px"}
