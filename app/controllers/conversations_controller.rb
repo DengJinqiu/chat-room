@@ -14,26 +14,21 @@ class ConversationsController < ApplicationController
 
     data = get_conversation_html(get_current_user(), context, conversation.updated_at)
     ActionCable.server.broadcast groupId, {action: 'newMessage', message: data, currentUser: get_current_user()}
-    head :ok
+    render js: "$('#sendContext').val('');"
   end
 
   def show
-    Rails.logger.debug "Fetch conversations with group id" + params[:id]
-    conversations = Conversation.select(:user, :context, :updated_at).where(group_id: params[:id])
-    command = ""
-    for conversation in conversations do
-      command << "$('#message-board').append('" <<  get_conversation_html(conversation.user, conversation.context, conversation.updated_at) << "');"
-    end
-    render js: command
+    lastMessageTime = Time.at(params[:lastMessageTime].to_f)
+    Rails.logger.debug "Fetch conversation with group id " + params[:id] + " before " + lastMessageTime.to_s(:db)
+    conversation = Conversation.where("group_id=? and updated_at < ?", params[:id], lastMessageTime).order("updated_at DESC").first
+    Rails.logger.debug "Get conversation with group id " << conversation.group_id + " time stamp " + conversation.updated_at.to_s(:db) + " context " + conversation.context
+    render json: {html: get_conversation_html(conversation.user, conversation.context, conversation.updated_at),
+                  lastMessageTime: conversation.updated_at.to_f}
   end
 
   private
     def conversation_params
       params.require(:conversation).permit(:context)
-    end
-
-    def get_conversation_html(user, context, time)
-      "<p>" + time.to_s(:db) + " <b>" + user + "</b>: " + context + "</p>"
     end
 end
 

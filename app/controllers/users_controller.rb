@@ -23,6 +23,9 @@ class UsersController < ApplicationController
     @selectedUser = params[:selectedUser]
     if @selectedUser
       @groupId = get_group_id @currentUser, @selectedUser
+      conversation = Conversation.where(group_id: @groupId).order("updated_at DESC").first
+      @lastMessageTime = conversation.updated_at.to_f
+      @lastMessageHtml = get_conversation_html(conversation.user, conversation.context, conversation.updated_at)
     end
   end
 

@@ -21,4 +21,8 @@ class ApplicationController < ActionController::Base
   def get_group_id(user1, user2)
     return user1 > user2 ? user1 + "*" + user2 : user2 + "*" + user1
   end
+
+  def get_conversation_html(user, context, time)
+    "<p>" + time.to_s(:db) + " <b>" + user + "</b>: " + context + "</p>"
+  end
 end
