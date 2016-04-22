@@ -12,7 +12,7 @@ class ConversationsController < ApplicationController
     conversation.user = get_current_user()
     conversation.save
 
-    data = get_conversation_html(get_current_user(), context, conversation.updated_at.to_s(:db))
+    data = get_conversation_html(get_current_user(), context, conversation.updated_at)
     ActionCable.server.broadcast groupId, {action: 'newMessage', message: data, currentUser: get_current_user()}
     head :ok
   end
@@ -20,6 +20,11 @@ class ConversationsController < ApplicationController
   def show
     Rails.logger.debug "Fetch conversations with group id" + params[:id]
     conversations = Conversation.select(:user, :context, :updated_at).where(group_id: params[:id])
+    command = ""
+    for conversation in conversations do
+      command << "$('#message-board').append('" <<  get_conversation_html(conversation.user, conversation.context, conversation.updated_at) << "');"
+    end
+    render js: command
   end
 
   private
@@ -28,7 +33,7 @@ class ConversationsController < ApplicationController
     end
 
     def get_conversation_html(user, context, time)
-      "<p>" + time + " <b>" + user + "</b>: " + context + "</p>"
+      "<p>" + time.to_s(:db) + " <b>" + user + "</b>: " + context + "</p>"
     end
 end
 

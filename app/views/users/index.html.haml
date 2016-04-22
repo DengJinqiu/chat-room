@@ -37,7 +37,7 @@
                 = f.text_field :context, :class => 'form-control', :id => 'userName', :placeholder => 'message', :autofocus => true, :required => true
                 = f.text_field :selectedUser, :value => "#{@selectedUser}", :type => 'hidden'
                 = f.submit "Send", :style => "float: right", :class => 'button btn button-success btn-primary'
-              = button_to "Fetch history", {:controller => 'conversations', :action => 'show', :id => "#{@groupId}"}, :method => 'get', :class => 'btn btn-success'
+              = button_to "Fetch history", {:controller => 'conversations', :action => 'show', :id => "#{@groupId}"}, :method => 'get', remote:true, :class => 'btn btn-success'
           - else
             %h3{:style => "margin-top: 0px"}
               %span.label.label-info Please select a person to chat with

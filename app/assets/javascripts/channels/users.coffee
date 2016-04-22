@@ -8,6 +8,7 @@ App.users = App.cable.subscriptions.create "UsersChannel",
       when "newUser"
         $('#users-board').append(data.message)
       when "newMessage"
+        #alert('new message')
         if data.currentUser is window.App.Data.currentUser
           $('#message-board').append("<div style=\"color: dodgerblue\">" + data.message + "</p>")
         else
