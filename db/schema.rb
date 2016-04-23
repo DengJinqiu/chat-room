@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20160420172242) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "conversations", force: :cascade do |t|
     t.string   "group_id"
     t.string   "user"
@@ -21,8 +24,8 @@ ActiveRecord::Schema.define(version: 20160420172242) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "conversations", ["group_id"], name: "index_conversations_on_group_id"
-  add_index "conversations", ["updated_at"], name: "index_conversations_on_updated_at"
+  add_index "conversations", ["group_id"], name: "index_conversations_on_group_id", using: :btree
+  add_index "conversations", ["updated_at"], name: "index_conversations_on_updated_at", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "name"
@@ -30,6 +33,6 @@ ActiveRecord::Schema.define(version: 20160420172242) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "users", ["name"], name: "index_users_on_name", unique: true
+  add_index "users", ["name"], name: "index_users_on_name", unique: true, using: :btree
 
 end
