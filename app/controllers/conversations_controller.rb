@@ -14,6 +14,7 @@ class ConversationsController < ApplicationController
 
     data = get_raw_conversation_html(get_current_user(), context, conversation.updated_at)
     ActionCable.server.broadcast groupId, {action: 'newMessage', message: data, currentUser: get_current_user()}
+
     render js: "$('#sendContext').val('');"
   end
 

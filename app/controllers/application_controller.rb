@@ -8,9 +8,10 @@ class ApplicationController < ActionController::Base
   def verify_user
     if get_current_user()
       Rails.logger.debug "Current user is " + get_current_user()
+      return true
     else
-      Rails.logger.debug "Current user does not exist, redirect to home page"
-      redirect_to root_url
+      Rails.logger.debug "Current user does not exist"
+      return false
     end
   end
 
@@ -35,6 +36,6 @@ class ApplicationController < ActionController::Base
   end
 
   def get_no_message_alert()
-    "<p style=\"color: orangered\">no more message</p>"
+    "<p style=\"color: orangered\">No more messages to show.</p>"
   end
 end

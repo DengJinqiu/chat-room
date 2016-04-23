@@ -7,5 +7,8 @@ class CreateConversations < ActiveRecord::Migration[5.0]
 
       t.timestamps
     end
+
+    add_index :conversations, :group_id
+    add_index :conversations, :updated_at
   end
 end

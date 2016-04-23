@@ -2,8 +2,9 @@
 %html
   %body
     .container
-      = form_for :user, :html => {:class => 'form-login'}, :url => {:controller => 'users', :action => 'create'} do |f|
+      = form_for :user, :html => {:id => 'board', :class => 'form-login'}, :url => {:controller => 'users', :action => 'create'}, remote:true do |f|
         %h2.form-login-heading Please create account
         = f.text_field :name, :class => 'form-control', :type => 'name', :id => 'userName', :placeholder => 'User name', :autofocus => true, :required => true
         %p
         = f.submit "Create", :class => 'button btn btn-lg btn-primary btn-block'
+        %p

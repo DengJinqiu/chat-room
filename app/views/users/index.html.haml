@@ -23,27 +23,43 @@
   %body
     %script App.users.followConversationsAndUsersChange()
     .container
-      %nav.navbar.navbar-inverse
-        .navbar-brand
-          Current user is:
-          = @currentUser
-        .navbar-right.navbar-collapse
-          = button_to "Log out", {:controller => 'sessions', :action => 'destroy',:id => "dummy"}, :method => 'delete', :class => 'btn btn-warning'
+      %nav.navbar.navbar-default
+        .navbar-header
+          %button.navbar-toggle{"type" => "button", "data-toggle" => "collapse", "data-target" => ".navbar-collapse"}
+            %span.sr-only
+              Toggle navigation
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          %a.navbar-brand
+            Welcome
+            %strong
+              = @currentUser
+
+        .collapse.navbar-collapse.navbar-collapse.navbar-right#navbar
+          %ul.nav.navbar-nav
+            %li
+              = link_to "Log out", {:controller => 'sessions', :action => 'destroy',:id => "dummy"}, :method => 'delete'
+
       .row
         .col-sm-3
-          .panel.panel-default{"id" => "users-board", :style => "min-height: 100px; max-height: 300px; overflow-y: scroll"}
-            %ul.list-group
-            - @userNames.each do |name|
-              %li.list-group-item
-                = link_to name, {:controller => 'users', :action => 'index', :selectedUser => name}
+          .panel.panel-info
+            .panel-heading
+              .panel-title
+                Avalible users
+            .panel-body{:id => "users-board", :style => "padding: 0px; min-height: 0px; max-height: 500px; max-with: 100px; overflow-y: scroll"}
+              .list-group{:style => "margin: 0px"}
+                - @userNames.each do |name|
+                  .list-group-item
+                    = link_to name, {:controller => 'users', :action => 'index', :selectedUser => name}
         .col-sm-9
           - if @selectedUser
-            %h3{:style => "margin-top: 0px"}
-              %span.label.label-info
-                You are chatting with:
-                = @selectedUser
-            .panel.panel-default{"data-channel" => "messages", :style => "min-height: 100px; max-height: 300px; overflow-y: scroll"}
-              .container{:id => 'message-board'}
+            .panel.panel-info
+              .panel-heading
+                .panel-title
+                  Chatting with:
+                  = @selectedUser
+              .panel-body{:id => "message-board", :style => "min-height: 100px; max-height: 500px; overflow-y: scroll"}
                 = raw @lastMessageHtml
             .panel.panel-default
               = form_for :conversation, :url => {:controller => 'conversations', :action => 'create'}, remote:true do |f|
@@ -51,7 +67,7 @@
                 = f.text_field :selectedUser, :value => "#{@selectedUser}", :type => 'hidden'
                 = f.submit "Send", :style => "float: right", :class => 'button btn button-success btn-primary'
               .btn.btn-success{:onclick => 'myFunction()'}
-                Fetch history
+                Previous message
           - else
             %h3{:style => "margin-top: 0px"}
-              %span.label.label-info Please select a person to chat with
+              %span.label.label-warning Please select a person to chat with.

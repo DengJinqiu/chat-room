@@ -21,6 +21,9 @@ ActiveRecord::Schema.define(version: 20160420172242) do
     t.datetime "updated_at", null: false
   end
 
+  add_index "conversations", ["group_id"], name: "index_conversations_on_group_id"
+  add_index "conversations", ["updated_at"], name: "index_conversations_on_updated_at"
+
   create_table "users", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at", null: false

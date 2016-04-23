@@ -2,10 +2,11 @@
 %html
   %body
     .container
-      = form_for :session, :html => {:class => 'form-login'}, :url => {:controller => 'sessions', :action => 'create'} do |f|
+      = form_for :session, :html => {:id => 'board', :class => 'form-login'}, :url => {:controller => 'sessions', :action => 'create'}, remote:true do |f|
         %h2.form-login-heading Please sign in
         = f.text_field :name, :class => 'form-control', :type => 'name', :id => 'userName', :placeholder => 'User name', :autofocus => true, :required => true
         %p
         = f.submit "Sign in", :class => 'button btn btn-lg btn-primary btn-block'
         Don't have account,
         %a{:href => "users/new"} create account
+        %p

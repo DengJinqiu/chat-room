@@ -2,14 +2,22 @@ class UsersController < ApplicationController
   def create
     Rails.logger.debug "Create " << params[:user][:name]
 
+    if User.exists?(name: params[:user][:name])
+      render js: "$('#board').append('<div class=\"alert alert-danger\">" + params[:user][:name] + " has been taken." + "<\div>')"
+      return
+    end
+
     user = User.new(user_params)
-    user.save
     session[:current_user_id] = user.name
+
     ActionCable.server.broadcast "userChange", \
       {action: "newUser", \
        message: "<li class=\"list-group-item\"> \
         <a href=\"/users?selectedUser=" + params[:user][:name] + "\">" \
           + params[:user][:name] + "</a></li>"}
+
+    user.save
+
     redirect_to :action => "index"
   end
 
@@ -17,7 +25,10 @@ class UsersController < ApplicationController
   end
 
   def index
-    verify_user
+    if not verify_user
+      redirect_to root_url
+      return
+    end
     @currentUser = get_current_user()
     @userNames = User.where.not(name: @currentUser).pluck(:name)
     @selectedUser = params[:selectedUser]
