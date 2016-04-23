@@ -22,7 +22,19 @@ class ApplicationController < ActionController::Base
     return user1 > user2 ? user1 + "*" + user2 : user2 + "*" + user1
   end
 
-  def get_conversation_html(user, context, time)
+  def get_raw_conversation_html(user, context, time)
     "<p>" + time.to_s(:db) + " <b>" + user + "</b>: " + context + "</p>"
+  end
+
+  def get_colored_conversation_html(user, context, time)
+    if get_current_user().eql? user
+      return "<div style=\"color: dodgerblue\">" + get_raw_conversation_html(user, context, time) + "</div>"
+    else
+      return get_raw_conversation_html(user, context, time)
+    end
+  end
+
+  def get_no_message_alert()
+    "<p style=\"color: orangered\">no more message</p>"
   end
 end

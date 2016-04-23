@@ -12,7 +12,7 @@ class ConversationsController < ApplicationController
     conversation.user = get_current_user()
     conversation.save
 
-    data = get_conversation_html(get_current_user(), context, conversation.updated_at)
+    data = get_raw_conversation_html(get_current_user(), context, conversation.updated_at)
     ActionCable.server.broadcast groupId, {action: 'newMessage', message: data, currentUser: get_current_user()}
     render js: "$('#sendContext').val('');"
   end
@@ -21,9 +21,13 @@ class ConversationsController < ApplicationController
     lastMessageTime = Time.at(params[:lastMessageTime].to_f)
     Rails.logger.debug "Fetch conversation with group id " + params[:id] + " before " + lastMessageTime.to_s(:db)
     conversation = Conversation.where("group_id=? and updated_at < ?", params[:id], lastMessageTime).order("updated_at DESC").first
-    Rails.logger.debug "Get conversation with group id " << conversation.group_id + " time stamp " + conversation.updated_at.to_s(:db) + " context " + conversation.context
-    render json: {html: get_conversation_html(conversation.user, conversation.context, conversation.updated_at),
-                  lastMessageTime: conversation.updated_at.to_f}
+    if conversation
+      Rails.logger.debug "Get conversation with group id " << conversation.group_id + " time stamp " + conversation.updated_at.to_s(:db) + " context " + conversation.context
+      render json: {html: get_colored_conversation_html(conversation.user, conversation.context, conversation.updated_at),
+                    lastMessageTime: conversation.updated_at.to_f}
+    else
+      render json: {html: get_no_message_alert()}
+    end
   end
 
   private
@@ -31,4 +35,3 @@ class ConversationsController < ApplicationController
       params.require(:conversation).permit(:context)
     end
 end
-

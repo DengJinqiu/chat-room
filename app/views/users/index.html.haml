@@ -14,13 +14,14 @@
           type: "get",
           data: {lastMessageTime: window.App.Data.lastMessageTime},
           success: function(response){
-            $('#message-board').append(response.html);
+            $('#message-board').prepend(response.html);
             window.App.Data.lastMessageTime = response.lastMessageTime
-            alert(window.App.Data.lastMessageTime)
           }
         });
       }
+
   %body
+    %script App.users.followConversationsAndUsersChange()
     .container
       %nav.navbar.navbar-inverse
         .navbar-brand
@@ -36,10 +37,7 @@
               %li.list-group-item
                 = link_to name, {:controller => 'users', :action => 'index', :selectedUser => name}
         .col-sm-9
-          %script App.users.disconnect()
-          %script App.users.followUsersChange()
           - if @selectedUser
-            %script App.users.followConversationsChange()
             %h3{:style => "margin-top: 0px"}
               %span.label.label-info
                 You are chatting with:

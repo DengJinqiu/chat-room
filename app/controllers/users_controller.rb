@@ -24,8 +24,12 @@ class UsersController < ApplicationController
     if @selectedUser
       @groupId = get_group_id @currentUser, @selectedUser
       conversation = Conversation.where(group_id: @groupId).order("updated_at DESC").first
-      @lastMessageTime = conversation.updated_at.to_f
-      @lastMessageHtml = get_conversation_html(conversation.user, conversation.context, conversation.updated_at)
+      if conversation
+        @lastMessageTime = conversation.updated_at.to_f
+        @lastMessageHtml = get_colored_conversation_html(conversation.user, conversation.context, conversation.updated_at)
+      else
+        @lastMessageHtml = get_no_message_alert()
+      end
     end
   end
 
