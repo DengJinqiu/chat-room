@@ -39,8 +39,8 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Action Cable endpoint configuration
-  config.action_cable.url = 'wss://mighty-retreat-38975.herokuapp.com/cable'
-  config.action_cable.allowed_request_origins = [ 'http://mighty-retreat-38975.herokuapp.com', /http:\/\/mighty-retreat-38975.herokuapp.*/ ]
+  config.action_cable.url = 'wss://jd-chat-room.herokuapp.com/cable'
+  config.action_cable.allowed_request_origins = [ 'http://jd-chat-room.herokuapp.com', /http:\/\/jd-chat-room.herokuapp.*/ ]
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
