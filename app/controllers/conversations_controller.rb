@@ -13,6 +13,7 @@ class ConversationsController < ApplicationController
     conversation.save
 
     data = get_raw_conversation_html(get_current_user(), context, conversation.updated_at.localtime)
+    # broadcast add new message through websocket
     ActionCable.server.broadcast groupId, {action: 'newMessage', message: data, currentUser: get_current_user()}
 
     render js: "$('#sendContext').val('');"
@@ -20,11 +21,16 @@ class ConversationsController < ApplicationController
 
   def show
     lastMessageTime = Time.at(params[:lastMessageTime].to_f)
-    Rails.logger.debug "Fetch conversation with group id " + params[:id] + " before " + lastMessageTime.to_s(:db)
+    Rails.logger.debug "Fetch conversation with group id " + \
+      params[:id] + " before " + lastMessageTime.to_s(:db)
     conversation = Conversation.where("group_id=? and updated_at < ?", params[:id], lastMessageTime).order("updated_at DESC").first
     if conversation
-      Rails.logger.debug "Get conversation with group id " << conversation.group_id + " time stamp " + conversation.updated_at.to_s(:db) + " context " + conversation.context
-      render json: {html: get_colored_conversation_html(conversation.user, conversation.context, conversation.updated_at.localtime),
+      Rails.logger.debug "Get conversation with group id " + \
+        conversation.group_id + " time stamp " + conversation.updated_at.to_s(:db) + \
+        " context " + conversation.context
+      render json: {html: get_colored_conversation_html(conversation.user, \
+                                                        conversation.context, \
+                                                        conversation.updated_at.localtime),
                     lastMessageTime: conversation.updated_at.to_f}
     else
       render json: {html: get_no_message_alert()}

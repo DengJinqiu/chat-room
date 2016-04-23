@@ -3,13 +3,15 @@ class UsersController < ApplicationController
     Rails.logger.debug "Create " << params[:user][:name]
 
     if User.exists?(name: params[:user][:name])
-      render js: "$('#board').append('<div class=\"alert alert-danger\">" + params[:user][:name] + " has been taken." + "<\div>')"
+      render js: "$('#board').append('<div class=\"alert alert-danger\">" + \
+                  params[:user][:name] + " has been taken." + "<\div>')"
       return
     end
 
     user = User.new(user_params)
     session[:current_user_id] = user.name
 
+    # broadcast add new user through websocket
     ActionCable.server.broadcast "userChange", \
       {action: "newUser", \
        message: "<li class=\"list-group-item\"> \
@@ -37,7 +39,9 @@ class UsersController < ApplicationController
       conversation = Conversation.where(group_id: @groupId).order("updated_at DESC").first
       if conversation
         @lastMessageTime = conversation.updated_at.to_f
-        @lastMessageHtml = get_colored_conversation_html(conversation.user, conversation.context, conversation.updated_at.localtime)
+        @lastMessageHtml = get_colored_conversation_html(conversation.user, \
+                                                         conversation.context, \
+                                                         conversation.updated_at.localtime)
       else
         @lastMessageHtml = get_no_message_alert()
       end
