@@ -42,7 +42,7 @@
               = link_to "Log out", {:controller => 'sessions', :action => 'destroy',:id => "dummy"}, :method => 'delete'
 
       .row
-        .col-sm-3
+        .col-md-3
           .panel.panel-info
             .panel-heading
               .panel-title
@@ -52,7 +52,7 @@
                 - @userNames.each do |name|
                   .list-group-item
                     = link_to name, {:controller => 'users', :action => 'index', :selectedUser => name}
-        .col-sm-9
+        .col-md-9
           - if @selectedUser
             .panel.panel-info
               .panel-heading
